@@ -48,6 +48,7 @@
                     <h1 class="text-2xl font-medium">Our Services</h1>
                 </div>
                 <div class="flex justify-end">
+                <a href="{{route('dashboard')}}">Dashboard<span class="ps-1 pe-2 ">|</span> </a>
                     <a href="{{url('home')}}">Home <span class="ps-1 pe-2 ">|</span></a>
                     <a href="{{URL::to('contact-us')}}">Contact Us<span class="ps-1 pe-2 ">|</span></a>
                     <a href="{{route('services')}}">Our Services</a>
