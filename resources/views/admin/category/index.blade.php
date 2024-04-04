@@ -25,12 +25,13 @@
                 </tr>
             </thead>
             <tbody>
-                @php($i=1)
+             {{--   @php($i=1)--}}
                 @foreach($categories as $category)
                 <tr>
-                <th scope="row">{{$i++}}</th>
+                <th scope="row">{{$categories->firstItem()+$loop->index}}</th>
                 <td>{{$category->category_name}}</td>
-                <td>{{$category->user_id}}</td>
+                <td>{{$category->name}}</td>
+                {{--<td>{{$category->user_id}}</td>--}}
                 <td>
                 @if($category->created_at==NULL)
                     <span class="text-danger">Date not Set...</span>
@@ -43,6 +44,10 @@
                 @endforeach
             </tbody>
             </table>
+            <div class="p-1">
+            {{$categories->links()}}
+            </div>
+            
             </div>
             {{--insert form--}}
             <div class="col-md-4">
