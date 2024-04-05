@@ -22,6 +22,7 @@
                 <th scope="col">Category</th>
                 <th scope="col">User</th>
                 <th scope="col">Created</th>
+                <th scope="col">Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -38,6 +39,10 @@
                 @else    
                 {{Carbon\Carbon::parse($category->created_at)->diffforHumans()}}
                 @endif    
+            </td>
+            <td>
+                <a href="{{url("category/edit/".$category->id)}}" class="btn btn-info">Edit</a>
+                <a href="{{url("softdelete/category/".$category->id)}}" class="btn btn-danger">Trash</a>
             </td>
                 
                 </tr>
@@ -69,9 +74,47 @@
                     </div>
                 </div>
             </div>
-
-
-
+            {{--TRASHED LIST--}}
+            <div class="card p-0 col-md-8 overflow-hidden">
+            <div class="card-header">Trash List</div>
+            <table class="table">
+            <thead class="table-light">
+                <tr>
+                <th scope="col">List #</th>
+                <th scope="col">Category</th>
+                <th scope="col">User</th>
+                <th scope="col">Created</th>
+                <th scope="col">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+             {{--   @php($i=1)--}}
+                @foreach($trashes as $category)
+                <tr>
+                <th scope="row">{{$categories->firstItem()+$loop->index}}</th>
+                <td>{{$category->category_name}}</td>
+                <td>{{$category->user->name}}</td>
+                {{--<td>{{$category->user_id}}</td>--}}
+                <td>
+                @if($category->created_at==NULL)
+                    <span class="text-danger">Date not Set...</span>
+                @else    
+                {{Carbon\Carbon::parse($category->created_at)->diffforHumans()}}
+                @endif    
+            </td>
+            <td>
+                <a href="{{url("category/restore/".$category->id)}}" class="btn btn-info">Restore</a>
+                <a href="{{url("delete/category/".$category->id)}}" class="btn btn-danger">Delete</a>
+            </td>
+                
+                </tr>
+                @endforeach
+            </tbody>
+            </table>
+            <div class="p-1">
+            {{$trashes->links()}}
+            </div>    
+            </div>
             </div>
         </div>
 

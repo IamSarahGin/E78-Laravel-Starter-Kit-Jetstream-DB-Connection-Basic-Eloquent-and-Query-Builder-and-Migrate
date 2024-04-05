@@ -14,15 +14,18 @@ class CategoryController extends Controller
         //$categories = Category::all();
         //$categories = Category::latest()->get();
         //pagination
-        //$categories=Category::latest()->paginate(4);
+        $categories=Category::latest()->paginate(5);
+//get deleted items
+        $trashes = Category::onlyTrashed()->paginate(3);
+
         //relationship usingQueryBuilder
-        $categories = DB::table("categories")
-        ->join('users','categories.user_id', 'users.id')
-        ->select('categories.*','users.name')
-        ->latest()->paginate(4);
+        //$categories = DB::table("categories")
+        //->join('users','categories.user_id', 'users.id')
+        //->select('categories.*','users.name')
+        //->latest()->paginate(4);
         //$categories=DB::table("categories")->latest()->paginate(4);
         //$categories=DB::table("categories")->latest()->get();
-        return view("admin.category.index",compact("categories"));
+        return view("admin.category.index",compact("categories","trashes"));
     }
     //add category
     public function AddCat(Request $request){
@@ -64,4 +67,34 @@ class CategoryController extends Controller
             //adds redirect and go back to page with session
             return Redirect()->back()->with('success','Category Inserted Successfully');
     }
+
+    public function Edit($id){
+        $categories=DB::table('categories')->where('id',$id)->first();
+        return view('admin.category.edit',compact('categories'));
+    }
+
+    //update function 
+    public function Update(Request $request, $id){
+        $data = array();
+        $data['category_name']=$request->category_name;
+        $data['user_id']=Auth::user()->id;
+        DB::table('categories')->where('id',$id)->update($data);
+        return Redirect()->route('all.category')->with('success','category Updated Successfully');
+    }
+
+    public function SoftDelete($id){
+        $delete=Category::find($id)->delete();
+        return Redirect()->back()->with('success',' Successfully moved to trash!');
+
+    }
+
+    public function Restore($id){
+    $delete=Category::withTrashed()->find($id)->restore();
+    return Redirect()->back()->with('success',' Successfully restored item!');
+}
+
+public function Delete($id){
+    $delete=Category::onlyTrashed()->find($id)->forceDelete();
+    return Redirect()->back()->with('success',' Successfully deleted item!');
+}
 }
